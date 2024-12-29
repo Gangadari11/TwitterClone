@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
         default: [],
     }
     ],
-    foolowing:[
+    following:[
     {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User',
