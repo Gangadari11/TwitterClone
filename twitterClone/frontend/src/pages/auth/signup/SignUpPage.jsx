@@ -7,7 +7,7 @@ import { MdOutlineMail } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import { MdPassword } from "react-icons/md";
 import { MdDriveFileRenameOutline } from "react-icons/md";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 const SignUpPage = () => {
@@ -18,39 +18,7 @@ const SignUpPage = () => {
 		password: "",
 	});
 
-	// const {mutate , isError , isPending , error} = useMutation({
-	// 	mutationFn: async ({email , username, fullName, password}) =>{
-	// 		try {
-	// 			const res = await fetch('/api/auth/signup' , {
-	// 				method:'POST',
-	// 				headers:{
-	// 					'Content-Type':'application/json'
-	// 				},
-	// 				body:JSON.stringify({email , username, fullName, password}),
-	// 			});
-
-				
-	// 			const data = await res.json();
-
-	// 			if (!res.ok) throw new Error(data.error || "Failed to create account");
-	// 			console.log(data);
-	// 			return data;
-
-
-
-	// 		} catch (error) {
-	// 			console.log(error);
-	// 			throw error;
-	// 		}
-	// 	},
-	// 	onSuccess: () => {
-	// 		toast.success('Account created successfully');
-	// 	},
-
-	// 	onError: () => {
-	// 		toast.error(error.message)
-	// 	}
-	// });
+	const queryClient = useQueryClient();
 
 	const { mutate, isError, isPending, error } = useMutation({
 		mutationFn: async ({ email, username, fullName, password }) => {
@@ -83,7 +51,7 @@ const SignUpPage = () => {
 	});
 
 	const handleSubmit = (e) => {
-		e.preventDefault();  //Page wont reload
+		e.preventDefault(); // page won't reload
 		mutate(formData);
 	};
 
@@ -91,11 +59,10 @@ const SignUpPage = () => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
-
 	return (
 		<div className='max-w-screen-xl mx-auto flex h-screen px-10'>
 			<div className='flex-1 hidden lg:flex items-center  justify-center'>
-				<XSvg className=' lg:w-2/3 fill-white' />
+				<XSvg className='lg:w-2/3 fill-white' />
 			</div>
 			<div className='flex-1 flex flex-col justify-center items-center'>
 				<form className='lg:w-2/3  mx-auto md:mx-20 flex gap-4 flex-col' onSubmit={handleSubmit}>

@@ -1,23 +1,27 @@
 import { Link } from "react-router-dom";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-hot-toast";
+
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 import { IoSettingsOutline } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
-import toast from "react-hot-toast";
 
 const NotificationPage = () => {
-	
 	const queryClient = useQueryClient();
-	const { data: notifications, isLoading} = useQuery({
+	const { data: notifications , isLoading } = useQuery({
 		queryKey: ["notifications"],
 		queryFn: async () => {
 			try {
 				const res = await fetch("/api/notifications");
 				const data = await res.json();
-				if (!res.ok) {
-					throw new Error(data.error || "Something went wrong!");
+				// if (!res.ok) throw new Error(data.error || "Something went wrong");
+				if (!res.ok) throw new Error(data.error || "Something went wrong");
+				// Add this check and transformation if needed
+				if (data && !Array.isArray(data)) {
+				  // If data is nested in an object, access the correct property
+				  return Array.isArray(data.notifications) ? data.notifications : [];
 				}
 				return data;
 			} catch (error) {
@@ -26,30 +30,28 @@ const NotificationPage = () => {
 		},
 	});
 
-		const {mutate:deleteNotifications} = useMutation({
-			mutationFn: async() => {
-				try{
-					const res = await fetch("/api/notifications", {
-					    method: 'DELETE',
-					});
+	const { mutate: deleteNotifications } = useMutation({
+		mutationFn: async () => {
+			try {
+				const res = await fetch("/api/notifications", {
+					method: "DELETE",
+				});
+				const data = await res.json();
 
-					const data = await res.json();
-					if (!res.ok) {
-					    throw new Error(data.error || "Something went wrong!");
-					}
-					return data;
-				}catch(error){
-					throw new Error(error);
-				}
-			},
-			onSuccess:(data) => {
-			    toast.success("Notification deleted successfully!");
-				queryClient.invalidateQueries({queryKey:['notifications']});
-			},
-			onError:(error) => {
-				toast.error(error.message);
-			},
-		});
+				if (!res.ok) throw new Error(data.error || "Something went wrong");
+				return data;
+			} catch (error) {
+				throw new Error(error);
+			}
+		},
+		onSuccess: () => {
+			toast.success("Notifications deleted successfully");
+			queryClient.invalidateQueries({ queryKey: ["notifications"] });
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
 
 	return (
 		<>
@@ -76,6 +78,7 @@ const NotificationPage = () => {
 					</div>
 				)}
 				{notifications?.length === 0 && <div className='text-center p-4 font-bold'>No notifications 🤔</div>}
+
 				{notifications?.map((notification) => (
 					<div className='border-b border-gray-700' key={notification._id}>
 						<div className='flex gap-2 p-4'>
@@ -100,5 +103,3 @@ const NotificationPage = () => {
 	);
 };
 export default NotificationPage;
-
-
