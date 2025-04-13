@@ -5,7 +5,7 @@
 
 
 
-## 🌌 Features
+## 🌌 Features 
 * 🔵 Tech Stack: Built with React.js, MongoDB, Node.js, Express, and TailwindCSS.
 * 🔐 Secure Authentication: Protect your account using JSON Web Tokens (JWT).
 * 🌊 Smooth Data Management: Harnessing React Query for efficient data fetching, caching, and updates.
