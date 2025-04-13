@@ -1,4 +1,4 @@
-# Twitter Clone 🌼
+# 🌼 Twitter Clone 
 ## MERN Stack project : Build and deploy a twitter clone from scratch | JWT , socket.io
 
 ![image](https://github.com/user-attachments/assets/4af9607a-6c7c-4345-baef-6c90a88622be)
